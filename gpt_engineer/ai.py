@@ -9,7 +9,12 @@ import openai
 import tiktoken
 
 logger = logging.getLogger(__name__)
-
+# Azure OpenAI API reference https://pypi.org/project/openai/
+openai.api_type = "azure"
+openai.api_base = "https://jkjlucky.openai.azure.com"
+openai.api_version = "2023-05-15"
+deployment_id="LangChain"
+openai.api_key = "107705249762493ebbc08132b70d3d2b" # 或者在系统变量设置OPENAI_API_KEY
 
 @dataclass
 class TokenUsage:
@@ -23,7 +28,7 @@ class TokenUsage:
 
 
 class AI:
-    def __init__(self, model="gpt-4", temperature=0.1):
+    def __init__(self, model="gpt-3.5-turbo", temperature=0.1):
         self.temperature = temperature
         self.model = model
 
@@ -66,6 +71,7 @@ class AI:
 
         logger.debug(f"Creating a new chat completion: {messages}")
         response = openai.ChatCompletion.create(
+            deployment_id = deployment_id, # add for azure openai
             messages=messages,
             stream=True,
             model=self.model,
